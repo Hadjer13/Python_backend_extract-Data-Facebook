@@ -12,7 +12,7 @@ from gestionsource.serializers import SourceSiteSerializer , SourceRSSerializer 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from utilities import scrapSite
+from gestioncollecte.collecteDataOffre import scrapSite
 
 @api_view(['GET', 'POST'])
 def sourceSite_list(request):

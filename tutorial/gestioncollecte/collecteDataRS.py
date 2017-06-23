@@ -1,55 +1,21 @@
-from lxml import html
-# encoding: utf-8
-import codecs
-import io
-import urllib2
-import json
+import facebook
 import datetime
-import csv
-import time
-import requests
-from gestionsource.serializers import CollecteSiteSerializer, SourceSiteSerializer
-from gestionsource.models import SourceSite
-
-def scrapSite(d):
-
-
-    print "Thread started"
-    serializer = CollecteSiteSerializer(data=d)
-    if serializer.is_valid():
-
-        path = serializer.data['xpath']
-        pk = serializer.data['id_source_site']
-
-        source = SourceSite.objects.get(pk=pk)
-        serializer2 = SourceSiteSerializer(source)
-
-        page = requests.get(serializer2.data['link'])
-
-        tree = html.fromstring(page.content)
-
-        offre = tree.xpath(path)
-        # i = 0
-        # list = {}
-        for o in offre:
-            o = o.strip()
-            o = o.encode('UTF-8')
-            print o
-            print "Thread finished"
-        return 0
-    else:
-        print "Thread stopped"
-        return -1
+import json
 
 def scrapRS(d):
     serializer = CollecteRSSerializer(data=d)
     if serializer.is_valid():
         app_id = serializer.data['appID']
         app_secret = serializer.data['appSecret']
+        print app_secret
+        print app_id
 
-        app_id = "175905439591084"
-        app_secret = "551dc63b4566af6aa7b5109b41d9971a"  # DO NOT SHARE WITH ANYONE!
-        page_id = "50847714953"
+    serializer2 = SourceRSSerializer(data=d2)
+    if serializer2.is_valid():
+
+      #  app_id = "175905439591084"
+        #app_secret = "551dc63b4566af6aa7b5109b41d9971a"  # DO NOT SHARE WITH ANYONE!
+
 
         access_token = app_id + "|" + app_secret
 
@@ -78,7 +44,7 @@ def scrapRS(d):
 
         def getFacebookPageFeedData(page_id, access_token, num_statuses):
 
-            # Construct the URL string; see http://stackoverflow.com/a/37239851 for
+            # Construct the URL string
             # Reactions parameters
             base = "https://graph.facebook.com/v2.6"
             node = "/%s/posts" % page_id
@@ -95,7 +61,6 @@ def scrapRS(d):
 
         def getReactionsForStatus(status_id, access_token):
 
-            # See http://stackoverflow.com/a/37239851 for Reactions parameters
             # Reactions are only accessable at a single-post endpoint
 
             base = "https://graph.facebook.com/v2.6"
@@ -240,9 +205,7 @@ def scrapRS(d):
                                           "num_sads": num_sads,
                                           "num_angrys": num_angrys
                                           }
-                            client = MongoClient('localhost', 27017)
-                            db = client.pfe
-                            db.Post.insert_one(key_insert).inserted_id
+                           #ici insert save
 
                         # output progress occasionally to make sure code is not
                         # stalling
@@ -261,6 +224,22 @@ def scrapRS(d):
                 print "\nDone!\n%s Statuses Processed in %s" % \
                       (num_processed, datetime.datetime.now() - scrape_starttime)
 
+        def getPage(access,url):
+            graph = facebook.GraphAPI(access_token=access, version='2.7')
+
+            page1 = graph.request('?id=' + url)
+
+            id1 = page1['id']
+
+            nbfans1 = graph.request(id1 + '?fields=fan_count')
+
+            page = Page(idPage=data['id'],name=data['name'],link=url,nbAbonnee=data['fan_count'])
+            page.save()
+            return id1
+
+
         if __name__ == '__main__':
-            scrapeFacebookPageFeedStatus(page_id, access_token)
+            id = getPage(access_token, 'http://facebook.com/djezzy')
+
+            scrapeFacebookPageFeedStatus(id, access_token)
 

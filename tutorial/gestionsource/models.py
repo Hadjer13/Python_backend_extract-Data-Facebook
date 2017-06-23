@@ -41,10 +41,9 @@ class CollecteSite(models.Model):
 class CollecteRS(models.Model):
 
 
-    type = models.CharField(max_length=100, blank=True, default='')
+    nom = models.CharField(max_length=100, blank=True, default='')
     appID = models.CharField(max_length=100, blank=True, default='')
     appSecret = models.CharField(max_length=100, blank=True, default='')
-    id_source_RS = models.IntegerField(default=0,null=False, blank=True)
     timer = models.IntegerField(default=0,null=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 

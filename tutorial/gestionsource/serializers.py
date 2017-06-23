@@ -18,7 +18,7 @@ class SourceRSSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SourceRS
-        fields = ('id', 'link', 'id_operateur')
+        fields = ('id', 'link', 'id_RS','id_operateur')
 
 
 class CollecteSiteSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class CollecteSiteSerializer(serializers.ModelSerializer):
 class CollecteRSSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollecteRS
-        fields = ('id', 'id_source_RS','appID','appSecret','timer' )
+        fields = ('id','nom' ,'appID','appSecret','timer' )
 
 class OperateurSerializer(serializers.ModelSerializer):
     class Meta:
